@@ -1,0 +1,18 @@
+{
+    "app": "Investing Go",
+    "periodo": {
+        "data-inicial": "2021-01-01",
+        "data-final": "2021-06-30",
+        "incremental": true
+    },
+    "dados": {
+        "acoes": {
+            "empresas-br": ["ITUB3.SA", "PETR3.SA", "ABEV3.SA", "VALE3.SA", "BBAS3.SA"]
+        },
+        "criptomoedas": ["BTC", "ETH", "LTC", "DOGE", "BNB"],
+        "fiis": ["BR_MALLS"],
+        "fundos": [null],
+        "moedas": ["BRL", "USD", "EUR"],
+        "tesouro-direto": ["PRE-2026", "PRE-2031", "SELIC-2024", "SELIC-2027", "IPCA-2026", "IPCA-2035", "IPCA-2045", "IPCA-2030-SEM", "IPCA-2040-SEM", "IPCA-2055-SEM"]
+    }
+}
