@@ -1,0 +1,17 @@
+{
+    "app_name": "Investing Go",
+    "periodo": {
+        "data_inicial": "2021-01-01",
+        "data_final": "2021-06-30"
+    },
+    "dados": {
+        "acoes": {
+            "empresas_br": ["ITUB3.SA", "PETR3.SA", "ABEV3.SA", "VALE3.SA", "BBAS3.SA"]
+        },
+        "criptomoedas": ["BTC", "ETH", "LTC", "DOGE", "BNB"],
+        "fiis": [],
+        "fundos": [],
+        "moedas": ["BRL", "USD", "EUR"],
+        "tesouro-direto": []
+    }
+}

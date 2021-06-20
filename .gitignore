@@ -1,0 +1,15 @@
+# ------------------------------
+# arquivos não rastreados
+# ------------------------------
+
+# pasta "app"
+app
+
+# pasta "scripts"
+scripts/cotacoes/*.py
+!scripts/cotacoes/acoes.py
+scripts/empresas/*.py
+scripts/indices/*.py
+
+# pasta "tests"
+test_pandas.py
