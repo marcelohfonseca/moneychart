@@ -1,0 +1,10 @@
+version: '3'
+services:
+    data:
+        container_name: 'investing-go'
+        build: ./scripts
+        volumes: 
+            - ./scripts:/scripts
+            - ./dados:/dados
+        working_dir: /scripts
+        tty: true
