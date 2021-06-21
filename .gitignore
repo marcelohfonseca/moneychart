@@ -3,11 +3,12 @@
 # ------------------------------
 
 # pasta "app"
-app
+app/power-bi/*.pbix
 
 # pasta "scripts"
 scripts/cotacoes/*.py
 !scripts/cotacoes/acoes.py
+
 scripts/empresas/*.py
 scripts/indices/*.py
 
