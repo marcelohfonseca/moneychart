@@ -1,7 +1,7 @@
 {
     "app": "Investing Go",
     "periodo": {
-        "ano-inicial": 2021,
+        "ano-inicial": 2017,
         "incremental": true
     },
     "dados": {
