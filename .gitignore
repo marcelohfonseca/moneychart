@@ -4,6 +4,7 @@
 
 # pasta "app"
 app/power-bi/*.pbix
+tests
 
 # pasta "scripts"
 scripts/cotacoes/*.py

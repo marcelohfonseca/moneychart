@@ -1,17 +1,18 @@
 {
     "app": "Investing Go",
+    "arquivos": "",
     "periodo": {
         "ano-inicial": 2017,
-        "incremental": true
+        "incremental": false
     },
     "dados": {
         "acoes": {
-            "empresas-br": ["ITUB3", "PETR3", "ABEV3", "VALE3", "BBAS3"]
+            "brasil": ["ITUB3", "XPOM11", "PETR3", "ABEV3", "VALE3", "BBAS3"]
         },
         "criptomoedas": ["BTC", "ETH", "LTC", "DOGE", "BNB"],
-        "fiis": ["BR_MALLS"],
-        "fundos": [null],
+        "fiis": [],
+        "fundos": [],
         "moedas": ["BRL", "USD", "EUR"],
-        "tesouro-direto": ["PRE-2026", "PRE-2031", "SELIC-2024", "SELIC-2027", "IPCA-2026", "IPCA-2035", "IPCA-2045", "IPCA-2030-SEM", "IPCA-2040-SEM", "IPCA-2055-SEM"]
+        "tesouro-direto": []
     }
 }
