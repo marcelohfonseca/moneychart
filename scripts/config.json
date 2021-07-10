@@ -1,11 +1,11 @@
 {
     "app": "Investing Go",
-    "arquivos": "",
+    "salvar-dados": "../../dados/",
     "periodo": {
         "ano-inicial": 2017,
         "incremental": false
     },
-    "dados": {
+    "coletar-dados": {
         "acoes": {
             "brasil": ["ITUB3", "XPOM11", "PETR3", "ABEV3", "VALE3", "BBAS3"]
         },

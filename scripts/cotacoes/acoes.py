@@ -7,12 +7,12 @@ from datetime import date
 with open('../config.json') as config_file:
     config = json.load(config_file)
 
-diretorio = '../../dados/cotacoes/acoes/'
+diretorio = config['salvar-dados'] + 'cotacoes/acoes/'
 incremental = config['periodo']['incremental']
 ano_inicial = config['periodo']['ano-inicial']
 ano_final = date.today().year
 periodo = list(range(int(ano_inicial), int(ano_final) + 1, 1))
-ativos = config['dados']['acoes']['brasil']
+ativos = config['coletar-dados']['acoes']['brasil']
 error_list = []
 
 if len(ativos) == 0:
