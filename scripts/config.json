@@ -1,18 +1,19 @@
 {
     "app": "Investing Go",
-    "salvar-dados": "../../dados/",
+    "pasta-dados": "../../dados/",
     "periodo": {
         "ano-inicial": 2017,
-        "incremental": false
+        "ano-final": false,
+        "incremental": false,
+        "intervalo": "Daily"
     },
-    "coletar-dados": {
-        "acoes": {
-            "brasil": ["ITUB3", "XPOM11", "PETR3", "ABEV3", "VALE3", "BBAS3"]
-        },
-        "criptomoedas": ["BTC", "ETH", "LTC", "DOGE", "BNB"],
-        "fiis": [],
+    "filtrar-ativos": {
+        "acoes": [],
+        "criptomoedas": ["Bitcoin","Ethereum","Litecoin","Dogecoin","Binance Coin"],
+        "etfs": [],
         "fundos": [],
-        "moedas": ["BRL", "USD", "EUR"],
-        "tesouro-direto": []
+        "indices": [],
+        "moedas": ["USD/BRL","EUR/BRL"],
+        "tesouro": false
     }
 }

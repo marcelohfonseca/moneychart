@@ -4,14 +4,9 @@
 
 # pasta "app"
 app/power-bi/*.pbix
-tests
-
-# pasta "scripts"
-scripts/cotacoes/*.py
-!scripts/cotacoes/acoes.py
-
-scripts/empresas/*.py
-scripts/indices/*.py
 
 # pasta "tests"
-test_pandas.py
+tests/*
+
+# pasta "dados"
+dados/*
