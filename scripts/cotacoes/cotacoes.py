@@ -66,8 +66,7 @@ class Cotacoes:
             else:
                 self.ativos = list({k:v for k,v in dict_ativos.items() if k in self.ativos}.values())
             
-            for ativo in self.ativos: 
-                           
+            for ativo in self.ativos:                           
                 try:
                     cd_ativo = list({k:v for k,v in dict_ativos.items() if v == ativo}.keys())[0]
                     df_historico = pd.DataFrame(inv.get_crypto_historical_data(crypto=ativo, from_date=self.dt_inicial, to_date=self.dt_final, interval=intervalo))
