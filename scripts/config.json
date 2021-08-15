@@ -4,14 +4,14 @@
     "periodo": {
         "ano-inicial": 2017,
         "ano-final": false,
-        "incremental": false,
+        "incremental": true,
         "intervalo": "Daily"
     },
     "filtrar-ativos": {
         "acoes": [],
-        "criptomoedas": ["Bitcoin","Ethereum","Litecoin","Dogecoin","Binance Coin"],
+        "criptomoedas": ["BTC","ETH","BNB","DOGE","ADA"],
         "etfs": [],
-        "fundos": [],
+        "fundos": false,
         "indices": [],
         "moedas": ["USD/BRL","EUR/BRL"],
         "tesouro": false

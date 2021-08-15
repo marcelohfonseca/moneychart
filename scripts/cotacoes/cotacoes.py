@@ -21,8 +21,6 @@ lista_ativos = {
             'moedas': config['filtrar-ativos']['moedas'], 
             'tesouro': config['filtrar-ativos']['tesouro']}
 
-lista_erros = []
-
 class Cotacoes:
     # tabela base para o historico de cotacoes
 
@@ -31,7 +29,9 @@ class Cotacoes:
         self.ativos = ativos
         self.dt_inicial = dt_inicial
         self.dt_final = dt_final
-        self.df_cotacoes = pd.DataFrame(columns=['Date', 'Open', 'High', 'Low', 'Close', 'Volume', 'Currency', 'Ticket'])
+        self.columns = ['Date', 'Open', 'High', 'Low', 'Close', 'Volume', 'Currency', 'Ticket']
+        self.df_cotacoes = pd.DataFrame(columns=self.columns)
+        self.lista_erros = []
 
     # buscar os dados de cotacoes
     def cotacoes(self):
@@ -49,78 +49,108 @@ class Cotacoes:
                     df_historico.reset_index(inplace = True)
                     self.df_cotacoes = self.df_cotacoes.append(df_historico)       
                 except:
-                    lista_erros.append(ativo)
+                    self.lista_erros.append(ativo)
 
         # no caso de criptomoedas
         if self.tipo == 'criptomoedas':           
 
-            # faz um de-para entre o nome e código da criptomoeda
-            cripto = inv.get_cryptos_dict(columns=['name','symbol'])
-            cripto_nome = []
-            cripto_ticket = []
+            # faz um de-para entre o nome e código
+            dict_base = inv.get_cryptos_dict(columns=['name','symbol'])
+            dict_ativos = {}
             
-            for i in range(len(cripto)):
-                cripto_nome.append(cripto[i].get('name'))
-                cripto_ticket.append(cripto[i].get('symbol'))
-            
-            df_cripto = pd.DataFrame({'nome': cripto_nome, 'cd_ativo': cripto_ticket}, index=cripto_nome)
+            for i in range(len(dict_base)):
+                dict_ativos[dict_base[i].get('symbol')] = dict_base[i].get('name')
 
             if len(self.ativos) == 0 or self.ativos == True:
-                self.ativos = inv.get_cryptos_list()
+                self.ativos = dict_ativos.values()
+            else:
+                self.ativos = list({k:v for k,v in dict_ativos.items() if k in self.ativos}.values())
             
-            for ativo in self.ativos:
+            for ativo in self.ativos: 
+                           
                 try:
+                    cd_ativo = list({k:v for k,v in dict_ativos.items() if v == ativo}.keys())[0]
                     df_historico = pd.DataFrame(inv.get_crypto_historical_data(crypto=ativo, from_date=self.dt_inicial, to_date=self.dt_final, interval=intervalo))
-                    df_historico = df_historico.assign(Ticket=df_cripto.loc[ativo,'cd_ativo'])
+                    df_historico = df_historico.assign(Ticket=cd_ativo)
                     df_historico.reset_index(inplace = True)
                     self.df_cotacoes = self.df_cotacoes.append(df_historico)       
                 except:
-                    lista_erros.append(ativo)
+                    self.lista_erros.append(ativo)
         
         # no caso de etfs
         if self.tipo == 'etfs':
+
+            # faz um de-para entre o nome e código
+            dict_base = inv.get_etfs_dict(columns=['name','symbol'])
+            dict_ativos = {}
+            
+            for i in range(len(dict_base)):
+                dict_ativos[dict_base[i].get('symbol')] = dict_base[i].get('name')
             
             if len(self.ativos) == 0 or self.ativos == True:
-                self.ativos = inv.get_etfs_list(country='Brazil')
+                self.ativos = dict_ativos.values()
+            else:
+                self.ativos = list({k:v for k,v in dict_ativos.items() if k in self.ativos}.values())
             
             for ativo in self.ativos:
                 try:
-                    df_historico = pd.DataFrame(inv.get_etf_historical_data(crypto=ativo, country='Brazil', from_date=self.dt_inicial, to_date=self.dt_final, interval=intervalo))
-                    df_historico = df_historico.assign(Ticket=ativo)
+                    cd_ativo = list({k:v for k,v in dict_ativos.items() if v == ativo}.keys())[0]
+                    df_historico = pd.DataFrame(inv.get_etf_historical_data(etf=ativo, country='Brazil', from_date=self.dt_inicial, to_date=self.dt_final, interval=intervalo))
+                    df_historico = df_historico.assign(Ticket=cd_ativo)
                     df_historico.reset_index(inplace = True)
                     self.df_cotacoes = self.df_cotacoes.append(df_historico)       
                 except:
-                    lista_erros.append(ativo)
+                    self.lista_erros.append(ativo)
         
         # no caso de fundos
         if self.tipo == 'fundos':
 
+            # faz um de-para entre o nome e código
+            dict_base = inv.get_funds_dict(columns=['name','symbol'])
+            dict_ativos = {}
+            
+            for i in range(len(dict_base)):
+                dict_ativos[dict_base[i].get('symbol')] = dict_base[i].get('name')
+
             if len(self.ativos) == 0 or self.ativos == True:
-                self.ativos = inv.get_funds_list(country='Brazil')
+                self.ativos = dict_ativos.values()
+            else:
+                self.ativos = list({k:v for k,v in dict_ativos.items() if k in self.ativos}.values())
             
             for ativo in self.ativos:
                 try:
-                    df_historico = pd.DataFrame(inv.get_fund_historical_data(crypto=ativo, country='Brazil', from_date=self.dt_inicial, to_date=self.dt_final, interval=intervalo))
-                    df_historico = df_historico.assign(Ticket=ativo)
+                    cd_ativo = list({k:v for k,v in dict_ativos.items() if v == ativo}.keys())[0]
+                    df_historico = pd.DataFrame(inv.get_fund_historical_data(fund=ativo, country='Brazil', from_date=self.dt_inicial, to_date=self.dt_final, interval=intervalo))
+                    df_historico = df_historico.assign(Ticket=cd_ativo)
                     df_historico.reset_index(inplace = True)
                     self.df_cotacoes = self.df_cotacoes.append(df_historico)       
                 except:
-                    lista_erros.append(ativo)
+                    self.lista_erros.append(ativo)
         
         # no caso de indices
         if self.tipo == 'indices':
+
+            # faz um de-para entre o nome e código
+            dict_base = inv.get_indices_dict(columns=['name','symbol'])
+            dict_ativos = {}
+            
+            for i in range(len(dict_base)):
+                dict_ativos[dict_base[i].get('symbol')] = dict_base[i].get('name')
             
             if len(self.ativos) == 0 or self.ativos == True:
-                self.ativos = inv.get_indices_list(country='Brazil')
+                self.ativos = dict_ativos.values()
+            else:
+                self.ativos = list({k:v for k,v in dict_ativos.items() if k in self.ativos}.values())
             
             for ativo in self.ativos:
                 try:
-                    df_historico = pd.DataFrame(inv.get_index_historical_data(crypto=ativo, country='Brazil', from_date=self.dt_inicial, to_date=self.dt_final, interval=intervalo))
-                    df_historico = df_historico.assign(Ticket=ativo)
+                    cd_ativo = list({k:v for k,v in dict_ativos.items() if v == ativo}.keys())[0]
+                    df_historico = pd.DataFrame(inv.get_index_historical_data(index=ativo, country='Brazil', from_date=self.dt_inicial, to_date=self.dt_final, interval=intervalo))
+                    df_historico = df_historico.assign(Ticket=cd_ativo)
                     df_historico.reset_index(inplace = True)
                     self.df_cotacoes = self.df_cotacoes.append(df_historico)       
                 except:
-                    lista_erros.append(ativo)
+                    self.lista_erros.append(ativo)
         
         # no caso de moedas
         if self.tipo == 'moedas':
@@ -135,11 +165,15 @@ class Cotacoes:
                     df_historico.reset_index(inplace = True)
                     self.df_cotacoes = self.df_cotacoes.append(df_historico)       
                 except:
-                    lista_erros.append(ativo)
+                    self.lista_erros.append(ativo)
         
         # no caso de tesouro
         if self.tipo == 'tesouro':
             print('Funcao ainda nao implementada')
+
+        # imprime a lista de erros
+        if len(self.lista_erros) > 0:
+            print(f'Não foi encontrado dados para estes ativos: {self.lista_erros}')
 
         return Cotacoes.salvar_arquivo(self.df_cotacoes)
 
@@ -157,9 +191,6 @@ class Cotacoes:
         
         tabela.sort_values(by=['dt_cotacao', 'cd_ativo'])        
         tabela.to_csv(f'{diretorio}{nome_arquivo}.csv', index=False)
-
-        if len(lista_erros) > 0:
-            print(f'Não foi encontrado dados para estes ativos: {lista_erros}')
 
         print(f'Arquivo salvo em "{diretorio}{nome_arquivo}.csv".')
 
