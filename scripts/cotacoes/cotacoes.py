@@ -94,7 +94,7 @@ class Cotacoes:
             for ativo in self.ativos:
                 try:
                     cd_ativo = list({k:v for k,v in dict_ativos.items() if v == ativo}.keys())[0]
-                    df_historico = pd.DataFrame(inv.get_etf_historical_data(etf=ativo, country='Brazil', from_date=self.dt_inicial, to_date=self.dt_final, interval=intervalo))
+                    df_historico = pd.DataFrame(inv.get_etf_historical_data(etf=ativo, country='Brazil', from_date=self.dt_inicial, to_date=self.dt_final, stock_exchange=None, interval=intervalo))
                     df_historico = df_historico.assign(Ticket=cd_ativo)
                     df_historico.reset_index(inplace = True)
                     self.df_cotacoes = self.df_cotacoes.append(df_historico)       
