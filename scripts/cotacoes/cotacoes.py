@@ -29,8 +29,8 @@ class Cotacoes:
         self.ativos = ativos
         self.dt_inicial = dt_inicial
         self.dt_final = dt_final
-        self.columns = ['Date', 'Open', 'High', 'Low', 'Close', 'Volume', 'Currency', 'Ticket']
-        self.df_cotacoes = pd.DataFrame(columns=self.columns)
+        self.dict_columns = {'Date':'dt_cotacao', 'Open':'vl_abertura', 'High':'vl_alta', 'Low':'vl_baixa', 'Close':'vl_fechamento', 'Volume':'qt_volume', 'Currency':'cd_moeda', 'Ticket':'cd_ativo'}
+        self.df_cotacoes = pd.DataFrame(columns=self.dict_columns.keys())
         self.lista_erros = []
 
     # buscar os dados de cotacoes
@@ -80,7 +80,7 @@ class Cotacoes:
         if self.tipo == 'etfs':
 
             # faz um de-para entre o nome e código
-            dict_base = inv.get_etfs_dict(columns=['name','symbol'])
+            dict_base = inv.get_etfs_dict(country='Brazil', columns=['name','symbol'])
             dict_ativos = {}
             
             for i in range(len(dict_base)):
@@ -94,8 +94,8 @@ class Cotacoes:
             for ativo in self.ativos:
                 try:
                     cd_ativo = list({k:v for k,v in dict_ativos.items() if v == ativo}.keys())[0]
-                    df_historico = pd.DataFrame(inv.get_etf_historical_data(etf=ativo, country='Brazil', from_date=self.dt_inicial, to_date=self.dt_final, stock_exchange=None, interval=intervalo))
-                    df_historico = df_historico.assign(Ticket=cd_ativo)
+                    df_historico = pd.DataFrame(inv.get_etf_historical_data(etf=ativo, country='Brazil', from_date=self.dt_inicial, to_date=self.dt_final, interval=intervalo))
+                    df_historico = df_historico.assign(Ticket=cd_ativo).drop(columns=['Exchange'])
                     df_historico.reset_index(inplace = True)
                     self.df_cotacoes = self.df_cotacoes.append(df_historico)       
                 except:
@@ -105,7 +105,7 @@ class Cotacoes:
         if self.tipo == 'fundos':
 
             # faz um de-para entre o nome e código
-            dict_base = inv.get_funds_dict(columns=['name','symbol'])
+            dict_base = inv.get_funds_dict(country='Brazil', columns=['name','symbol'])
             dict_ativos = {}
             
             for i in range(len(dict_base)):
@@ -130,7 +130,7 @@ class Cotacoes:
         if self.tipo == 'indices':
 
             # faz um de-para entre o nome e código
-            dict_base = inv.get_indices_dict(columns=['name','symbol'])
+            dict_base = inv.get_indices_dict(country='Brazil', columns=['name','symbol'])
             dict_ativos = {}
             
             for i in range(len(dict_base)):
@@ -155,7 +155,7 @@ class Cotacoes:
         if self.tipo == 'moedas':
 
             if len(self.ativos) == 0 or self.ativos == True:
-                self.ativos = inv.get_currency_crosses_list()
+                self.ativos = inv.get_currency_crosses_list(second='BRL')
             
             for ativo in self.ativos:
                 try:
@@ -174,23 +174,14 @@ class Cotacoes:
         if len(self.lista_erros) > 0:
             print(f'Não foi encontrado dados para estes ativos: {self.lista_erros}')
 
-        return Cotacoes.salvar_arquivo(self.df_cotacoes)
-
-     # renomear colunas, classificar e exportar os dados  
-    def salvar_arquivo(tabela):        
-        tabela.reset_index(inplace=True, drop=True)        
-        tabela = tabela.rename(columns={'Date':'dt_cotacao', 
-                                        'Open':'vl_abertura', 
-                                        'High':'vl_alta', 
-                                        'Low':'vl_baixa', 
-                                        'Close':'vl_fechamento', 
-                                        'Volume':'qt_volume', 
-                                        'Currency':'cd_moeda', 
-                                        'Ticket':'cd_ativo'})                                            
+        return Cotacoes.salvar_arquivo(self.df_cotacoes, self.dict_columns)
         
-        tabela.sort_values(by=['dt_cotacao', 'cd_ativo'])        
-        tabela.to_csv(f'{diretorio}{nome_arquivo}.csv', index=False)
-
+    # renomear colunas, classificar e exportar os dados  
+    def salvar_arquivo(df_cotacoes, dict_colunas):
+        df_cotacoes.reset_index(inplace=True, drop=True)  
+        df_cotacoes = df_cotacoes.rename(columns=dict_colunas)
+        df_cotacoes.sort_values(by=['dt_cotacao', 'cd_ativo'])        
+        df_cotacoes.to_csv(f'{diretorio}{nome_arquivo}.csv', index=False, decimal=',')
         print(f'Arquivo salvo em "{diretorio}{nome_arquivo}.csv".')
 
 for ativo in lista_ativos:
