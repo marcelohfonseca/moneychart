@@ -4,7 +4,7 @@
     "periodo": {
         "ano-inicial": 2017,
         "ano-final": false,
-        "incremental": true,
+        "incremental": false,
         "intervalo": "Daily"
     },
     "filtrar-ativos": {
@@ -14,6 +14,6 @@
         "fundos": false,
         "indices": [],
         "moedas": ["USD/BRL","EUR/BRL"],
-        "tesouro": false
+        "tesouro": []
     }
 }
