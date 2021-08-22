@@ -10,71 +10,61 @@ diretorio = config['pasta-dados'] + 'ativos/'
 nome_arquivo = 'ativos'
 
 lista_ativos = {
-            'acoes': config['filtrar-ativos']['acoes'], 
-            'criptomoedas': config['filtrar-ativos']['criptomoedas'], 
-            'etfs': config['filtrar-ativos']['etfs'], 
-            'fundos': config['filtrar-ativos']['fundos'], 
-            'indices': config['filtrar-ativos']['indices'], 
-            'moedas': config['filtrar-ativos']['moedas'], 
-            'tesouro': config['filtrar-ativos']['tesouro']}
+    'acoes': config['filtrar-ativos']['acoes'], 
+    'criptomoedas': config['filtrar-ativos']['criptomoedas'], 
+    'etfs': config['filtrar-ativos']['etfs'], 
+    'fundos': config['filtrar-ativos']['fundos'], 
+    'indices': config['filtrar-ativos']['indices'], 
+    'moedas': config['filtrar-ativos']['moedas'], 
+    'tesouro': config['filtrar-ativos']['tesouro']}
 
 # tabela base
 colunas = ['name', 'full_name', 'isin', 'currency', 'symbol', 'cd_api']
 ativos = pd.DataFrame(columns=colunas)
 
-for ativo in lista_ativos:
+for tipo_ativo in lista_ativos:
 
-    if lista_ativos[ativo] != False:
+    if lista_ativos[tipo_ativo] != False:
 
         # no caso de acoes
-        if ativo == 'acoes':
+        if tipo_ativo == 'acoes':
             df_ativo = pd.DataFrame(inv.stocks.get_stocks(country='Brazil'), columns=colunas)
-            df_ativo = df_ativo.assign(cd_api='stocks')
-
-            if len(lista_ativos['acoes']) > 0:
-                df_ativo = df_ativo.loc[df_ativo['symbol'].isin(lista_ativos['acoes'])]
+            df_ativo = df_ativo.assign(cd_api='investpy/stocks')
 
         # no caso de criptomoedas
-        if ativo == 'criptomoedas':
+        if tipo_ativo == 'criptomoedas':
             df_ativo = pd.DataFrame(inv.crypto.get_cryptos(), columns=colunas)
-            df_ativo = df_ativo.assign(cd_api='crypto', full_name=df_ativo['name'])
-            
-            if len(lista_ativos['criptomoedas']) > 0:
-                df_ativo = df_ativo.loc[df_ativo['name'].isin(lista_ativos['criptomoedas'])]
+            df_ativo = df_ativo.assign(cd_api='investpy/crypto', full_name=df_ativo['name'])
         
         # no caso de etfs
-        if ativo == 'etfs':
+        if tipo_ativo == 'etfs':
             df_ativo = pd.DataFrame(inv.etfs.get_etfs(country='Brazil'), columns=colunas)
-            df_ativo = df_ativo.assign(cd_api='etfs')
-
-            if len(lista_ativos['etfs']) > 0:
-                df_ativo = df_ativo.loc[df_ativo['symbol'].isin(lista_ativos['etfs'])]
+            df_ativo = df_ativo.assign(cd_api='investpy/etfs')
 
         # no caso de fundos
-        if ativo == 'fundos':
+        if tipo_ativo == 'fundos':
             df_ativo = pd.DataFrame(inv.funds.get_funds(country='Brazil'), columns=colunas)
-            df_ativo = df_ativo.assign(cd_api='funds')
-
-            if len(lista_ativos['fundos']) > 0:
-                df_ativo = df_ativo.loc[df_ativo['symbol'].isin(lista_ativos['fundos'])]
+            df_ativo = df_ativo.assign(cd_api='investpy/funds')
 
         # no caso de indices
-        if ativo == 'indices':
+        if tipo_ativo == 'indices':
             df_ativo = pd.DataFrame(inv.indices.get_indices(country='Brazil'), columns=colunas)
-            df_ativo = df_ativo.assign(cd_api='indices')
-
-            if len(lista_ativos['indices']) > 0:
-                df_ativo = df_ativo.loc[df_ativo['symbol'].isin(lista_ativos['indices'])]
+            df_ativo = df_ativo.assign(cd_api='investpy/indices')
         
         # no caso de moedas
-        if ativo == 'moedas':
+        if tipo_ativo == 'moedas':
             df_ativo = pd.DataFrame(inv.currency_crosses.get_currency_crosses(base='USD', second='BRL'), columns=colunas)
-            df_ativo = df_ativo.assign(cd_api='currency_crosses', currency='BRL')
-
-            if len(lista_ativos['moedas']) > 0:
-                df_ativo = df_ativo.loc[df_ativo['name'].isin(lista_ativos['moedas'])]
+            df_ativo = df_ativo.assign(cd_api='investpy/currency_crosses', currency='BRL', symbol=df_ativo['name'])
         
-        # concatenar todas as tabelas
+        # no caso de tesouro
+        if tipo_ativo == 'tesouro':
+            df_ativo = pd.read_csv('../de_para_tesouro.csv', sep=';')
+            df_ativo = df_ativo.assign(cd_api='tesouro-direto', symbol=df_ativo['Codigo'], currency='BRL', name=df_ativo['Tipo Titulo'], full_name=df_ativo['Tipo Titulo'])
+        
+        # filtrar e concatenar todas as tabelas
+        if len(lista_ativos[tipo_ativo]) > 0:
+            df_ativo = df_ativo.loc[df_ativo['symbol'].isin(lista_ativos[tipo_ativo])]
+    
         ativos = ativos.append(df_ativo)
 
 # tratamento dos dados

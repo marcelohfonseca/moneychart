@@ -13,13 +13,12 @@ incremental = config['periodo']['incremental']
 intervalo = config['periodo']['intervalo']
 
 lista_ativos = {
-            'acoes': config['filtrar-ativos']['acoes'], 
-            'criptomoedas': config['filtrar-ativos']['criptomoedas'], 
-            'etfs': config['filtrar-ativos']['etfs'], 
-            'fundos': config['filtrar-ativos']['fundos'], 
-            'indices': config['filtrar-ativos']['indices'], 
-            'moedas': config['filtrar-ativos']['moedas'], 
-            'tesouro': config['filtrar-ativos']['tesouro']}
+    'acoes': config['filtrar-ativos']['acoes'], 
+    'criptomoedas': config['filtrar-ativos']['criptomoedas'], 
+    'etfs': config['filtrar-ativos']['etfs'], 
+    'fundos': config['filtrar-ativos']['fundos'], 
+    'indices': config['filtrar-ativos']['indices'], 
+    'moedas': config['filtrar-ativos']['moedas']}
 
 class Cotacoes:
     # tabela base para o historico de cotacoes
@@ -47,7 +46,7 @@ class Cotacoes:
                     df_historico = pd.DataFrame(inv.get_stock_historical_data(stock=ativo, country='Brazil', from_date=self.dt_inicial, to_date=self.dt_final, interval=intervalo))
                     df_historico = df_historico.assign(Ticket=ativo)
                     df_historico.reset_index(inplace = True)
-                    self.df_cotacoes = self.df_cotacoes.append(df_historico)       
+                    self.df_cotacoes = self.df_cotacoes.append(df_historico)
                 except:
                     self.lista_erros.append(ativo)
 
@@ -72,7 +71,7 @@ class Cotacoes:
                     df_historico = pd.DataFrame(inv.get_crypto_historical_data(crypto=ativo, from_date=self.dt_inicial, to_date=self.dt_final, interval=intervalo))
                     df_historico = df_historico.assign(Ticket=cd_ativo)
                     df_historico.reset_index(inplace = True)
-                    self.df_cotacoes = self.df_cotacoes.append(df_historico)       
+                    self.df_cotacoes = self.df_cotacoes.append(df_historico)
                 except:
                     self.lista_erros.append(ativo)
         
@@ -97,7 +96,7 @@ class Cotacoes:
                     df_historico = pd.DataFrame(inv.get_etf_historical_data(etf=ativo, country='Brazil', from_date=self.dt_inicial, to_date=self.dt_final, interval=intervalo))
                     df_historico = df_historico.assign(Ticket=cd_ativo).drop(columns=['Exchange'])
                     df_historico.reset_index(inplace = True)
-                    self.df_cotacoes = self.df_cotacoes.append(df_historico)       
+                    self.df_cotacoes = self.df_cotacoes.append(df_historico)
                 except:
                     self.lista_erros.append(ativo)
         
@@ -122,7 +121,7 @@ class Cotacoes:
                     df_historico = pd.DataFrame(inv.get_fund_historical_data(fund=ativo, country='Brazil', from_date=self.dt_inicial, to_date=self.dt_final, interval=intervalo))
                     df_historico = df_historico.assign(Ticket=cd_ativo)
                     df_historico.reset_index(inplace = True)
-                    self.df_cotacoes = self.df_cotacoes.append(df_historico)       
+                    self.df_cotacoes = self.df_cotacoes.append(df_historico)
                 except:
                     self.lista_erros.append(ativo)
         
@@ -147,7 +146,7 @@ class Cotacoes:
                     df_historico = pd.DataFrame(inv.get_index_historical_data(index=ativo, country='Brazil', from_date=self.dt_inicial, to_date=self.dt_final, interval=intervalo))
                     df_historico = df_historico.assign(Ticket=cd_ativo)
                     df_historico.reset_index(inplace = True)
-                    self.df_cotacoes = self.df_cotacoes.append(df_historico)       
+                    self.df_cotacoes = self.df_cotacoes.append(df_historico)
                 except:
                     self.lista_erros.append(ativo)
         
@@ -162,24 +161,20 @@ class Cotacoes:
                     df_historico = pd.DataFrame(inv.get_currency_cross_historical_data(currency_cross=ativo, from_date=self.dt_inicial, to_date=self.dt_final, interval=intervalo))
                     df_historico = df_historico.assign(Ticket=ativo)
                     df_historico.reset_index(inplace = True)
-                    self.df_cotacoes = self.df_cotacoes.append(df_historico)       
+                    self.df_cotacoes = self.df_cotacoes.append(df_historico)
                 except:
                     self.lista_erros.append(ativo)
-        
-        # no caso de tesouro
-        if self.tipo == 'tesouro':
-            print('Funcao ainda nao implementada')
 
         # imprime a lista de erros
         if len(self.lista_erros) > 0:
-            print(f'Não foi encontrado dados para estes ativos: {self.lista_erros}')
+            print(f'Não foi encontrado dados entre {self.dt_inicial} e {self.dt_final} para estes ativos: {self.lista_erros}')
 
         return Cotacoes.salvar_arquivo(self.df_cotacoes, self.dict_columns)
         
     # renomear colunas, classificar e exportar os dados  
-    def salvar_arquivo(df_cotacoes, dict_colunas):
+    def salvar_arquivo(df_cotacoes, dict_columns):
         df_cotacoes.reset_index(inplace=True, drop=True)  
-        df_cotacoes = df_cotacoes.rename(columns=dict_colunas)
+        df_cotacoes = df_cotacoes.rename(columns=dict_columns)
         df_cotacoes.sort_values(by=['dt_cotacao', 'cd_ativo'])        
         df_cotacoes.to_csv(f'{diretorio}{nome_arquivo}.csv', index=False, decimal=',')
         print(f'Arquivo salvo em "{diretorio}{nome_arquivo}.csv".')
