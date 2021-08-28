@@ -1,4 +1,11 @@
 investpy
+json
 pandas
 datetime
-json
+zipfile
+io
+numpy
+requests
+beautifulsoup4
+html
+openpyxl
