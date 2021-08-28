@@ -1,10 +1,11 @@
 {
     "app": "Investing Go",
     "pasta-dados": "../../dados/",
+    "pais": "Brazil",
     "periodo": {
         "ano-inicial": 2017,
         "ano-final": false,
-        "incremental": false,
+        "incremental": true,
         "intervalo": "Daily"
     },
     "filtrar-ativos": {
