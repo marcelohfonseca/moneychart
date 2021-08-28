@@ -1,16 +1,26 @@
-import investpy as inv
+# Investing Go | Marcelo Henrique Fonseca => https://github.com/marcelohfonseca
+# Consulte os arquivos README.md e LICENSE.md para detalhes.
+
 import json
 import pandas as pd
+import numpy as np
 from datetime import date
     
 # buscar as configuracoes
 with open('../config.json') as config_file:
     config = json.load(config_file)
 
-ano_inicial = config['periodo']['ano-inicial']
-ano_final = config['periodo']['ano-final']
-incremental = config['periodo']['incremental']
-lista_ativos = config['filtrar-ativos']['tesouro']
+    """ 
+    O arquivo "../json.config" serve para definir alguns parâmetros 
+    importantes, como quais ativos serão utilizados para realização
+    da busca de dados pelos scripts, nome do arquivo final e diretorio.
+
+    """
+
+    ano_inicial = config['periodo']['ano-inicial']
+    ano_final = config['periodo']['ano-final']
+    incremental = config['periodo']['incremental']
+    lista_ativos = config['filtrar-ativos']['tesouro']
 
 class Tesouro:
     # tabela base para o historico de cotacoes
@@ -18,16 +28,15 @@ class Tesouro:
     def __init__(self, dt_inicial, dt_final):
         self.dt_inicial = dt_inicial
         self.dt_final = dt_final
-        self.dict_columns = {
-            'Data Base': 'dt_cotacao', 
-            'Data Vencimento': 'dt_vencimento', 
-            'Codigo': 'cd_ativo', 
-            'Taxa Compra Manha': 'pr_compra', 
-            'Taxa Venda Manha': 'pr_venda',
-            'PU Compra Manha': 'vl_compra',
-            'PU Venda Manha': 'vl_venda',
-            'PU Base Manha': 'vl_base'}
-        self.df_cotacoes = pd.DataFrame(columns=self.dict_columns.keys())
+        self.dict_columns = {'Data Base': 'dt_cotacao', 
+                             'Data Vencimento': 'dt_vencimento', 
+                             'Codigo': 'cd_ativo', 
+                             'Taxa Compra Manha': 'pr_compra', 
+                             'Taxa Venda Manha': 'pr_venda',
+                             'PU Compra Manha': 'vl_compra',
+                             'PU Venda Manha': 'vl_venda',
+                             'PU Base Manha': 'vl_base'}
+        self.df_cotacoes = pd.DataFrame(columns=self.dict_columns.values())
         self.df_titulos = pd.read_csv('../de_para_tesouro.csv', sep=';')
         self.lista_erros = []
 
@@ -38,7 +47,7 @@ class Tesouro:
 
         try:
             df_historico = pd.read_csv(link_precos_taxas, sep=';', decimal=',')
-            df_historico = df_historico.merge(self.df_titulos)
+            df_historico = df_historico.merge(self.df_titulos, )
             df_historico['Codigo'] = df_historico['Codigo'] + df_historico['Data Vencimento'].str[-4:]
             df_historico['Data Vencimento'] = pd.to_datetime(df_historico['Data Vencimento'], dayfirst=True)
             df_historico['Data Base'] = pd.to_datetime(df_historico['Data Base'], dayfirst=True)            
@@ -57,7 +66,10 @@ class Tesouro:
     def salvar_arquivo(df_cotacoes, dt_inicial, dt_final):
         df_cotacoes.reset_index(inplace=True, drop=True)
         df_cotacoes = df_cotacoes[(df_cotacoes['dt_cotacao'] >= dt_inicial) & (df_cotacoes['dt_cotacao'] <= dt_final)]
-        df_cotacoes.sort_values(by=['dt_cotacao','cd_ativo'])
+        df_cotacoes = df_cotacoes.sort_values(by=['cd_ativo','dt_cotacao'])
+        df_cotacoes['vl_var'] = df_cotacoes.vl_compra.diff()
+        df_cotacoes['pr_var'] = df_cotacoes.vl_compra.pct_change()*100
+        df_cotacoes['cd_var'] = np.where(df_cotacoes['vl_var'] > 0, '+', '-')
         df_cotacoes.to_csv(f'{diretorio}{nome_arquivo}.csv', index=False, decimal=',')
         print(f'Arquivo salvo em "{diretorio}{nome_arquivo}.csv".')
 
