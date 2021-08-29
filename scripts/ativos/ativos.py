@@ -32,18 +32,29 @@ with open('../config.json') as config_file:
     file_name = 'ativos'
     country = config['pais']
 
-    list_asset_type = {
-        'acoes': config['filtrar-ativos']['acoes'], 
-        'criptomoedas': config['filtrar-ativos']['criptomoedas'], 
-        'etfs': config['filtrar-ativos']['etfs'], 
-        'fundos': config['filtrar-ativos']['fundos'], 
-        'indices': config['filtrar-ativos']['indices'], 
-        'moedas': config['filtrar-ativos']['moedas'], 
-        'tesouro': config['filtrar-ativos']['tesouro']}
+    list_asset_type = {'acoes': config['filtrar-ativos']['acoes'], 
+                       'criptomoedas': config['filtrar-ativos']['criptomoedas'], 
+                       'etfs': config['filtrar-ativos']['etfs'], 
+                       'fundos': config['filtrar-ativos']['fundos'], 
+                       'indices': config['filtrar-ativos']['indices'], 
+                       'moedas': config['filtrar-ativos']['moedas'], 
+                       'tesouro': config['filtrar-ativos']['tesouro']}
 
 # --------------------------------------------------
 #  FORMAR DATAFRAME UNICO COM TODOS OS ATIVOS
 # --------------------------------------------------
+
+"""
+Verificar o tipo de ativo para selecionar a função correta da
+biblioteca "investpy". Para cada consulta, além dos campos padrões
+retornados, será adicionado a coluna "cd_ativo" para que o retorno
+dos dados seja concatenado com os demais ativos consultados.
+
+Se o parâmetro "filtrar-ativos" estiver listando valores para cada
+tipo de ativo, a consulta vai buscar apenas eles, senão, trará 
+todos os ativos daquele "tipo" (Ex: todos os ativos de ações).
+
+"""
 
 dict_columns = {'symbol': 'cd_ativo',
                 'name': 'nm_apelido',
@@ -175,7 +186,6 @@ response = content.find_all('span', class_='ticker')
 
 list_fiis = []
 list_error = []
-
 df_fiis = pd.DataFrame(columns=['cd_ativo','nm_classe','nm_setor','nm_subsetor','nm_segmento'])
 
 for i in range(len(response)):
@@ -203,7 +213,7 @@ for fii in list_fiis:
     except:
         list_error.append(fii)
 
-# imprime a lista de erros
+# imprime a lista de erros caso exista
 if len(list_error) > 0:
     print(f'Não foi encontrado dados para estes ativos: {list_error}')
 
@@ -223,5 +233,6 @@ df_result_stocks = pd.merge(left=df_assets.loc[~df_assets['cd_ativo'].isin(list_
 
 df_result = pd.concat([df_result_fii, df_result_stocks])
 
+# exportar para "csv"
 df_result.to_csv(f'{folder}{file_name}.csv', index=False)
 print(f'Arquivo salvo em "{folder}{file_name}.csv".')

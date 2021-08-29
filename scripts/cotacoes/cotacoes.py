@@ -1,3 +1,10 @@
+# Investing Go | Marcelo Henrique Fonseca => https://github.com/marcelohfonseca
+# Consulte os arquivos README.md e LICENSE.md para detalhes.
+
+# --------------------------------------------------
+# IMPORTAR BIBLIOTECAS E PARAMETROS INICIAIS
+# --------------------------------------------------
+
 import investpy as inv
 import json
 import pandas as pd
@@ -8,22 +15,45 @@ from datetime import date
 with open('../config.json') as config_file:
     config = json.load(config_file)
 
-year_start = config['periodo']['ano-inicial']
-year_end = config['periodo']['ano-final']
-incremental = config['periodo']['incremental']
-interval = config['periodo']['intervalo']
-country = config['pais']
+    """ 
+    O arquivo "../json.config" serve para definir alguns parâmetros 
+    importantes, como quais ativos serão utilizados para realização
+    da busca de dados pelos scripts, nome do arquivo final e diretorio.
 
-list_asset_type = {
-    'acoes': config['filtrar-ativos']['acoes'], 
-    'criptomoedas': config['filtrar-ativos']['criptomoedas'], 
-    'etfs': config['filtrar-ativos']['etfs'], 
-    'fundos': config['filtrar-ativos']['fundos'], 
-    'indices': config['filtrar-ativos']['indices'], 
-    'moedas': config['filtrar-ativos']['moedas']}
+    """
+
+    year_start = config['periodo']['ano-inicial']
+    year_end = config['periodo']['ano-final']
+    incremental = config['periodo']['incremental']
+    interval = config['periodo']['intervalo']
+    country = config['pais']
+
+    list_asset_type = {'acoes': config['filtrar-ativos']['acoes'], 
+                       'criptomoedas': config['filtrar-ativos']['criptomoedas'], 
+                       'etfs': config['filtrar-ativos']['etfs'], 
+                       'fundos': config['filtrar-ativos']['fundos'], 
+                       'indices': config['filtrar-ativos']['indices'], 
+                       'moedas': config['filtrar-ativos']['moedas']}
+
+# --------------------------------------------------
+# FUNCOES DE CONSULTA E TRATAMENTO DOS DADOS
+# --------------------------------------------------
 
 class Quotes:
-    # tabela base para o historico de cotacoes
+
+    """
+    Esta classe/função (Quotes => quotes) busca o histórico de cotações
+    através da biblioteca "investpy", para os tipos de ativos
+    ações, criptomoedas, etfs, fundos, índices e moedas. São passados
+    os parâmetros de "ticker", período e país do ativo.
+
+    O retorno dos dados segue o seguinte padrão:
+
+    Date | Open | High | Low | Close | Volume | Currency
+    -----|------|------|-----|-------|--------|----------
+    xxxx | xxxx | xxxx | xxx | xxxxx | xxxxxx | xxxxxxxx
+
+    """
 
     def __init__(self, type, assets, dt_start, dt_end):
         self.asset_type = type
@@ -44,6 +74,22 @@ class Quotes:
 
     # buscar os dados de cotacoes
     def quotes(self):
+
+        """
+        Verificar o tipo de ativo para selecionar a função correta da
+        biblioteca "investpy". Para cada consulta, além dos campos padrões
+        retornados, será adicionado a coluna "cd_ativo" para que o retorno
+        dos dados seja concatenado com os demais ativos consultados.
+
+        Se o parâmetro "filtrar-ativos" estiver listando valores para cada
+        tipo de ativo, a consulta vai buscar apenas eles, senão, trará 
+        todos os ativos daquele "tipo" (Ex: todos os ativos de ações).
+
+        Caso não seja encontrado o ativo pela consulta, o Ticker (código
+        do ativo) será inserido em uma lista de erros, para ser listado
+        ao fim da execução desta função.
+
+        """
 
         # no caso de acoes
         if self.asset_type == 'acoes':
@@ -197,7 +243,7 @@ class Quotes:
                 except:
                     self.list_error.append(symbol)
 
-        # imprime a lista de erros
+        # imprime a lista de erros caso exista
         if len(self.list_error) > 0:
             print(f'Não foi encontrado dados entre {self.dt_start} e {self.dt_end}' + 
                    'para estes ativos: {self.list_error}')
@@ -206,16 +252,54 @@ class Quotes:
         
     # renomear colunas, classificar e exportar os dados  
     def save_file(df_quotes, dict_columns):
+
+        """
+        Essa função tem o objetivo de pegar o dataframe retornado pela
+        função "quotes" e tratar, renomeando as colunas, classificando
+        os dados e também adicionando as colunas de variação do preço
+        de fechamento, em valor e percentual.
+
+        O dataframe final deve ficar como:
+
+        dt_cotacao | vl_abertura | vl_alta | vl_vaixa | vl_fechamento | =>
+        -----------|-------------|---------|----------|---------------|
+        xxxxxxxxxx | xxxxxxxxxxx | xxxxxxx | xxxxxxxx | xxxxxxxxxxxxx | 
+        
+        qt_volume | cd_moeda | cd_ativo | vl_var | pr_var | cd_var |
+        ----------|----------|----------|--------|--------|--------|
+        xxxxxxxxx | xxxxxxxx | xxxxxxxx | xxxxxx | xxxxxx | xxxxxx |
+
+        Onde, as novas colunas representam:
+            vl_var => Valor da variação de preço entre o dia atual e anterior
+            pr_var => % da variação de preço entre o dia atual e anterior
+            cd_var => símbolo de "+" ou "-" referente a variação de preço
+
+        """
+
         df_quotes.reset_index(inplace=True, drop=True)  
         df_quotes = df_quotes.rename(columns=dict_columns)
         df_quotes = df_quotes.sort_values(by=['cd_ativo','dt_cotacao'])
         df_quotes['vl_var'] = df_quotes.vl_fechamento.diff()
         df_quotes['pr_var'] = df_quotes.vl_fechamento.pct_change()*100
-        df_quotes['cd_var'] = np.where(df_quotes['vl_var'] > 0, '+', '-')      
+        df_quotes['cd_var'] = np.where(df_quotes['vl_var'] > 0, '+', '-')
+
+        # exportar para "csv"
         df_quotes.to_csv(f'{folder}{file_name}.csv', index=False, decimal=',')
         print(f'Arquivo salvo em "{folder}{file_name}.csv".')
 
+# --------------------------------------------------
+# CHAMAR AS FUNCOES
+# --------------------------------------------------
+
 for asset_type in list_asset_type:
+
+    """
+    Seguindo os parâmetros do arquivo "config.json", caso o item "incremental"
+    esteja marcado como "True", trazer os dados do último ano vigente (atual).
+    Se estiver "False", percorrer a listagem de anos entre os parâmetros 
+    "ano-inicial" e "ano_final", salvando um arquivo para cada ano.
+
+    """
 
     if list_asset_type[asset_type] != False:
         # buscar as cotacoes historicas
