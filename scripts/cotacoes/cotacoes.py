@@ -245,8 +245,7 @@ class Quotes:
 
         # imprime a lista de erros caso exista
         if len(self.list_error) > 0:
-            print(f'Não foi encontrado dados entre {self.dt_start} e {self.dt_end}' + 
-                   'para estes ativos: {self.list_error}')
+            print(f'Sem dados entre {self.dt_start} - {self.dt_end} para: {self.list_error}')
 
         return Quotes.save_file(self.df_quotes, self.dict_columns)
         
