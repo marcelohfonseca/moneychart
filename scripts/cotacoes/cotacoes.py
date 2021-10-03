@@ -6,10 +6,12 @@
 # --------------------------------------------------
 
 import investpy as inv
+
 import json
 import pandas as pd
 import numpy as np
 from datetime import date
+from tqdm import tqdm
 
 # buscar as configuracoes
 with open('../config.json') as config_file:
@@ -97,7 +99,7 @@ class Quotes:
             if len(self.list_symbol) == 0 or self.list_symbol == True:
                 self.list_symbol = inv.get_stocks_list(country=country)
             
-            for symbol in self.list_symbol:
+            for symbol in tqdm(self.list_symbol):
                 try:                    
                     df_history = pd.DataFrame(inv.get_stock_historical_data(stock=symbol, 
                                                                             country=country,
@@ -125,7 +127,7 @@ class Quotes:
             else:
                 self.list_symbol = list({k:v for k,v in dict_assets.items() if k in self.list_symbol}.values())
             
-            for symbol_name in self.list_symbol:                           
+            for symbol_name in tqdm(self.list_symbol):
                 try:
                     symbol = list({k:v for k,v in dict_assets.items() if v == symbol_name}.keys())[0]
                     df_history = pd.DataFrame(inv.get_crypto_historical_data(crypto=symbol_name, 
@@ -153,7 +155,7 @@ class Quotes:
             else:
                 self.list_symbol = list({k:v for k,v in dict_assets.items() if k in self.list_symbol}.values())
             
-            for symbol_name in self.list_symbol:
+            for symbol_name in tqdm(self.list_symbol):
                 try:
                     symbol = list({k:v for k,v in dict_assets.items() if v == symbol_name}.keys())[0]
                     df_history = pd.DataFrame(inv.get_etf_historical_data(etf=symbol_name, 
@@ -182,7 +184,7 @@ class Quotes:
             else:
                 self.list_symbol = list({k:v for k,v in dict_assets.items() if k in self.list_symbol}.values())
             
-            for symbol_name in self.list_symbol:
+            for symbol_name in tqdm(self.list_symbol):
                 try:
                     symbol = list({k:v for k,v in dict_assets.items() if v == symbol_name}.keys())[0]
                     df_history = pd.DataFrame(inv.get_fund_historical_data(fund=symbol_name, 
@@ -211,7 +213,7 @@ class Quotes:
             else:
                 self.list_symbol = list({k:v for k,v in dict_assets.items() if k in self.list_symbol}.values())
             
-            for symbol_name in self.list_symbol:
+            for symbol_name in tqdm(self.list_symbol):
                 try:
                     symbol = list({k:v for k,v in dict_assets.items() if v == symbol_name}.keys())[0]
                     df_history = pd.DataFrame(inv.get_index_historical_data(index=symbol_name, 
@@ -231,7 +233,7 @@ class Quotes:
             if len(self.list_symbol) == 0 or self.list_symbol == True:
                 self.list_symbol = inv.get_currency_crosses_list(second='BRL')
             
-            for symbol in self.list_symbol:
+            for symbol in tqdm(self.list_symbol):
                 try:
                     df_history = pd.DataFrame(inv.get_currency_cross_historical_data(currency_cross=symbol, 
                                                                                      from_date=self.dt_start, 
@@ -245,7 +247,7 @@ class Quotes:
 
         # imprime a lista de erros caso exista
         if len(self.list_error) > 0:
-            print(f'Sem dados entre {self.dt_start} - {self.dt_end} para: {self.list_error}')
+            print(f'AVISO: Sem dados entre {self.dt_start} - {self.dt_end} para: {self.list_error}')
 
         return Quotes.save_file(self.df_quotes, self.dict_columns)
         
@@ -284,7 +286,7 @@ class Quotes:
 
         # exportar para "csv"
         df_quotes.to_csv(f'{folder}{file_name}.csv', index=False, decimal=',')
-        print(f'Arquivo salvo em "{folder}{file_name}.csv".')
+        print(f'\n FIM: Arquivo salvo em "{folder}{file_name}.csv".')
 
 # --------------------------------------------------
 # CHAMAR AS FUNCOES
@@ -299,10 +301,10 @@ for asset_type in list_asset_type:
     "ano-inicial" e "ano_final", salvando um arquivo para cada ano.
 
     """
-
+    
     if list_asset_type[asset_type] != False:
         # buscar as cotacoes historicas
-        print(f'Buscando dados do tipo de ativo {asset_type}')
+        print(f'INICIO: Buscando dados do tipo de ativo "{asset_type}"')
 
         folder = config['pasta-dados'] + f'cotacoes/{asset_type}/'
 
@@ -329,5 +331,5 @@ for asset_type in list_asset_type:
                 # buscar os dados de forma incremental
                 Quotes(asset_type, list_asset_type[asset_type], dt_start, dt_end).quotes()
     else:
-        print(f'Desconsiderar o tipo de ativo {asset_type}')
+        print(f'AVISO: Desconsiderar o tipo de ativo "{asset_type}"')
     

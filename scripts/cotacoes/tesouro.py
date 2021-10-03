@@ -133,7 +133,7 @@ class Tesouro:
 
         # exportar para "csv"
         df_quotes.to_csv(f'{folder}{nome_arquivo}.csv', index=False, decimal=',')
-        print(f'Arquivo salvo em "{folder}{nome_arquivo}.csv".')
+        print(f'\n FIM: Arquivo salvo em "{folder}{nome_arquivo}.csv".')
 
 # --------------------------------------------------
 # CHAMAR AS FUNCOES
@@ -141,7 +141,7 @@ class Tesouro:
 
 if list_symbol != False:
     # buscar as cotacoes historicas
-    print(f'Buscando dados do tipo de ativo tesouro-direto')
+    print(f'INICIO: Buscando dados do tipo de ativo "tesouro-direto"')
 
     folder = config['pasta-dados'] + f'cotacoes/tesouro/'
 
@@ -158,5 +158,5 @@ if list_symbol != False:
         # buscar os dados de forma incremental
         Tesouro(dt_start, dt_end).prices() 
 else:
-    print(f'Desconsiderar o tipo de ativo tesouro-direto')
+    print(f'AVISO: Desconsiderar o tipo de ativo "tesouro-direto"')
     

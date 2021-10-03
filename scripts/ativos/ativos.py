@@ -6,6 +6,7 @@
 # --------------------------------------------------
 
 import investpy as inv
+
 import json
 import pandas as pd
 
@@ -64,6 +65,9 @@ dict_columns = {'symbol': 'cd_ativo',
                 'api': 'cd_api'}
 
 df_assets = pd.DataFrame(columns=dict_columns.keys())
+
+# buscar o cadastro de ativos
+print(f'INICIO: criando uma tabela com todos os ativos')
 
 for asset_type in list_asset_type:
     if list_asset_type[asset_type] != False:
@@ -215,7 +219,7 @@ for fii in list_fiis:
 
 # imprime a lista de erros caso exista
 if len(list_error) > 0:
-    print(f'Não foi encontrado dados para estes ativos: {list_error}')
+    print(f'AVISO: Não foram encontrados dados para estes ativos: {list_error}')
 
 # --------------------------------------------------
 # EXPORTAR OS DADOS
@@ -235,4 +239,4 @@ df_result = pd.concat([df_result_fii, df_result_stocks])
 
 # exportar para "csv"
 df_result.to_csv(f'{folder}{file_name}.csv', index=False)
-print(f'Arquivo salvo em "{folder}{file_name}.csv".')
+print(f'\n FIM: Arquivo salvo em "{folder}{file_name}.csv".')
