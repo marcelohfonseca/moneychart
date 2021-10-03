@@ -331,5 +331,5 @@ for asset_type in list_asset_type:
                 # buscar os dados de forma incremental
                 Quotes(asset_type, list_asset_type[asset_type], dt_start, dt_end).quotes()
     else:
-        print(f'AVISO: Desconsiderar o tipo de ativo "{asset_type}"')
+        print(f'AVISO: Desconsiderar o tipo de ativo "{asset_type}"' + '\n')
     
