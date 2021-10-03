@@ -239,4 +239,4 @@ df_result = pd.concat([df_result_fii, df_result_stocks])
 
 # exportar para "csv"
 df_result.to_csv(f'{folder}{file_name}.csv', index=False)
-print(f'\n FIM: Arquivo salvo em "{folder}{file_name}.csv".')
+print('\n' + f'FIM: Arquivo salvo em "{folder}{file_name}.csv".')

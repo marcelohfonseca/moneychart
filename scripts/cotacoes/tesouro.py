@@ -133,7 +133,7 @@ class Tesouro:
 
         # exportar para "csv"
         df_quotes.to_csv(f'{folder}{nome_arquivo}.csv', index=False, decimal=',')
-        print(f'\n FIM: Arquivo salvo em "{folder}{nome_arquivo}.csv".')
+        print('\n' + f'FIM: Arquivo salvo em "{folder}{nome_arquivo}.csv".')
 
 # --------------------------------------------------
 # CHAMAR AS FUNCOES
