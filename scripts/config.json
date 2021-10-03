@@ -12,7 +12,7 @@
         "acoes": [],
         "criptomoedas": ["BTC","ETH","BNB","DOGE","ADA"],
         "etfs": [],
-        "fundos": ["0P00016ZP9"],
+        "fundos": false,
         "indices": [],
         "moedas": ["USD/BRL","EUR/BRL"],
         "tesouro": []

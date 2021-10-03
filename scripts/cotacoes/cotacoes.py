@@ -286,7 +286,7 @@ class Quotes:
 
         # exportar para "csv"
         df_quotes.to_csv(f'{folder}{file_name}.csv', index=False, decimal=',')
-        print('\n' + f'FIM: Arquivo salvo em "{folder}{file_name}.csv".')
+        print(f'FIM: Arquivo salvo em "{folder}{file_name}.csv"' + '\n')
 
 # --------------------------------------------------
 # CHAMAR AS FUNCOES

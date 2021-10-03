@@ -5,8 +5,11 @@
 # pasta "app"
 app/power-bi/*.pbix
 
-# pasta "tests"
-tests/*
-
 # pasta "dados"
 dados/*
+
+# pasta "scripts"
+scripts/config.json
+
+# pasta "tests"
+tests/*
