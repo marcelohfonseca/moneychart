@@ -1,12 +1,9 @@
 investpy
-json
 pandas
-datetime
-zipfile
-io
 numpy
+datetime
 requests
 beautifulsoup4
-html
+lxml
 openpyxl
 tqdm
