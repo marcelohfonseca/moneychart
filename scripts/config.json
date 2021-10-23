@@ -14,7 +14,6 @@
         "etfs": [],
         "fundos": false,
         "indices": [],
-        "moedas": ["USD/BRL","EUR/BRL"],
-        "tesouro": []
+        "moedas": ["USD/BRL","EUR/BRL"]
     }
 }

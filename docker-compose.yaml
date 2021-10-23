@@ -4,8 +4,8 @@ services:
         container_name: 'investing-go'
         build: ./scripts
         volumes: 
-            - ./scripts:/investing-go/scripts
-            - ./dados:/investing-go/dados
-            - ./tests:/investing-go/tests
-        working_dir: /investing-go
+            - ./scripts:/home/investing-go/scripts
+            - ./dados:/home/investing-go/dados
+            - ./tests:/home/investing-go/tests
+        working_dir: /home/investing-go/scripts
         tty: true

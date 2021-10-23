@@ -19,6 +19,8 @@ import requests as r
 from bs4 import BeautifulSoup as bs
 from lxml import html
 
+from tqdm import tqdm
+
 with open('../config.json') as config_file:
     config = json.load(config_file)
 
@@ -69,7 +71,7 @@ df_assets = pd.DataFrame(columns=dict_columns.keys())
 # buscar o cadastro de ativos
 print(f'INICIO: criando uma tabela com todos os ativos')
 
-for asset_type in list_asset_type:
+for asset_type in tqdm(list_asset_type):
     if list_asset_type[asset_type] != False:
 
         # no caso de acoes
@@ -152,6 +154,8 @@ as linhas vazias.
 
 """
 
+print('> Classificando os ativos de acordo com o site da B3')
+
 url = 'http://www.b3.com.br/lumis/portal/file/fileDownload.jsp?fileId=8AA8D0975A2D7918015A3C81693D4CA4'
 file = ZipFile(io.BytesIO(urlopen(url).read()))
 
@@ -179,6 +183,8 @@ este tipo de informação complementar.
 
 """
 
+print('> Classificando os fundos imobiliários de acordo com o site FIIS')
+
 url = 'https://fiis.com.br/lista-de-fundos-imobiliarios/'
 
 headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) \
@@ -195,11 +201,11 @@ df_fiis = pd.DataFrame(columns=['cd_ativo','nm_classe','nm_setor','nm_subsetor',
 for i in range(len(response)):
     list_fiis.append(response[i].text)
 
-for fii in list_fiis:
+for fii in tqdm(list_fiis):
     try:
         url = f'https://fiis.com.br/{fii}' 
 
-        page = r.get(url) 
+        page = r.get(url, headers=headers) 
         content = html.fromstring(page.content)
 
         type = content.xpath('//*[@id="informations--basic"]/div[1]/div[2]/span[2]')
