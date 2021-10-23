@@ -10,6 +10,3 @@ dados/*
 
 # pasta "scripts"
 scripts/config.json
-
-# pasta "tests"
-tests/*
