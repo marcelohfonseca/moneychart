@@ -1,12 +1,19 @@
 # ------------------------------
-# arquivos não rastreados
+# .gitignore
 # ------------------------------
 
-# pasta "app"
-app/power-bi/*.pbix
+# Python compiled files
+__pycache__/
 
-# pasta "dados"
-dados/*
+# Jupyter Notebook
+.ipynb_checkpoints
 
-# pasta "scripts"
-scripts/config.json
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+
+# data folder
+dados/**/*.csv
