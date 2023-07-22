@@ -1,0 +1,27 @@
+[tool.poetry]
+name = "moneychart"
+version = "0.1.0"
+description = "Um projeto de análise de dados financeiros para pequenos investidores que gostariam de coletar insights sobre o mercado de ativos e faz"
+authors = ["Marcelo Henrique Fonseca <6546651+marcelohfonseca@users.noreply.github.com>"]
+license = "GNU General Public License v3.0"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+pandas = "^2.0.3"
+numpy = "^1.25.1"
+investpy = "^1.0.8"
+beautifulsoup4 = "^4.12.2"
+
+
+
+[tool.commitizen]
+name = "cz_conventional_commits"
+tag_format = "$version"
+version_scheme = "semver"
+version_provider = "poetry"
+update_changelog_on_bump = true
+major_version_zero = true
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
