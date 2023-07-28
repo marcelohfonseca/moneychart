@@ -1,19 +1,26 @@
 {
     "app": "MoneyChart",
-    "diretorio": "../data/",
-    "country": "Brazil",
+    "data-folder": "../data/",
     "period": {
         "last-years": 5,
         "incremental": true,
-        // [1, 5, 15, 30, 60, 300, "D", "W", "M"]
+        // possible values: "1", "5", "15", "30", "60", "D", "W", "M"
         "interval": "D"
     },
     "assets": {
         "crypto": ["BTC","ETH","LTC","BNB","USDC","USDT","DOGE","ADA","SOL","TRX"],
         "currency": ["USD/BRL","EUR/BRL"],
-        "etf": [],
-        "funds": false,
-        "index": [],
-        "stocks": []
+        "etf": {
+            "brazil": []
+        },
+        "funds": {
+            "brazil": [false]
+        },
+        "index": {
+            "brazil": []
+        },
+        "stocks": {
+            "brazil": []
+        }
     }
 }
