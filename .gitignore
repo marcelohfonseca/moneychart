@@ -17,3 +17,6 @@ ENV/
 
 # data folder
 dados/**/*.csv
+
+# logs
+data/*.log
