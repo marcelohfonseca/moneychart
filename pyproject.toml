@@ -15,6 +15,9 @@ beautifulsoup4 = "^4.12.2"
 
 
 
+[tool.poetry.group.dev.dependencies]
+black = "^23.7.0"
+
 [tool.commitizen]
 name = "cz_conventional_commits"
 tag_format = "$version"
