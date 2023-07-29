@@ -4,7 +4,6 @@
     "period": {
         "last-years": 5,
         "incremental": true,
-        // possible values: "1", "5", "15", "30", "60", "D", "W", "M"
         "interval": "D"
     },
     "assets": {
