@@ -12,8 +12,12 @@ pandas = "^2.0.3"
 numpy = "^1.25.1"
 investpy = "^1.0.8"
 beautifulsoup4 = "^4.12.2"
+investiny = "^0.7.2"
 
 
+
+[tool.poetry.group.dev.dependencies]
+black = "^23.7.0"
 
 [tool.commitizen]
 name = "cz_conventional_commits"

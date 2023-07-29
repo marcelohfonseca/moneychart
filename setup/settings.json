@@ -1,19 +1,32 @@
 {
-    "app": "Investing Go",
-    "pasta-dados": "../../dados/",
-    "pais": "Brazil",
-    "periodo": {
-        "ano-inicial": 2017,
-        "ano-final": false,
+    "app": "MoneyChart",
+    "data-folder": "../data/",
+    "period": {
+        "last-years": 5,
         "incremental": true,
-        "intervalo": "Daily"
+        "interval": "D"
     },
-    "filtrar-ativos": {
-        "acoes": [],
-        "criptomoedas": ["BTC","ETH","BNB","DOGE","ADA"],
-        "etfs": [],
-        "fundos": false,
-        "indices": [],
-        "moedas": ["USD/BRL","EUR/BRL"]
+    "assets": {
+        "crypto": {
+            "general": ["BTC","ETH","LTC","BNB","USDC","USDT","DOGE","ADA","SOL","TRX"]
+        },
+        "currency": {
+            "general": ["USD/BRL","EUR/BRL"]
+        },
+        "etf": {
+            "brazil": []
+        },
+        "funds": {
+            "brazil": false
+        },
+        "indices": {
+            "brazil": []
+        },
+        "stocks": {
+            "brazil": []
+        },
+        "national-treasury": {
+            "brazil": []
+        }
     }
 }
