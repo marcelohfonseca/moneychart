@@ -1,10 +1,23 @@
 {
     "app": "MoneyChart",
-    "data-folder": "../data/",
+    "data-folder": "../../data/",
     "period": {
         "last-years": 5,
         "incremental": true,
         "interval": "D"
+    },
+    "ignore": {
+        "crypto": true,
+        "currency": true,
+        "etf": true,
+        "funds": true,
+        "indices": true,
+        "stocks": false,
+        "national-treasury": true
+    },
+    "ignore-update": {
+        "b3_classification": false,
+        "fiis_classification": false
     },
     "assets": {
         "crypto": {
@@ -17,13 +30,14 @@
             "brazil": []
         },
         "funds": {
-            "brazil": false
+            "brazil": []
         },
         "indices": {
             "brazil": []
         },
         "stocks": {
-            "brazil": []
+            "brazil": ["PETR4","ABEV3","BBAS3"],
+            "united states": ["AAPL"]
         },
         "national-treasury": {
             "brazil": []
