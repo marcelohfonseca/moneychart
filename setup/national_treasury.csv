@@ -1,7 +1,7 @@
-Codigo;Tipo Titulo
-IPCA+SEM;Tesouro IPCA+ com Juros Semestrais
-IPCA+;Tesouro IPCA+
-PRE;Tesouro Prefixado
-IGPM+SEM;Tesouro IGPM+ com Juros Semestrais
-SELIC;Tesouro Selic
-PRE+SEM;Tesouro Prefixado com Juros Semestrais
+cd_pais;cd_moeda;cd_ativo;nm_ativo;nm_apelido
+Brazil;BRL;IPCA+SEM;Tesouro IPCA+ com Juros Semestrais;Tesouro IPCA+ Sem
+Brazil;BRL;IPCA+;Tesouro IPCA+;Tesouro IPCA+
+Brazil;BRL;PRE;Tesouro Prefixado;Tesouro Prefixado
+Brazil;BRL;IGPM+SEM;Tesouro IGPM+ com Juros Semestrais;Tesouro IGPM+ Sem
+Brazil;BRL;SELIC;Tesouro Selic;Tesouro Selic
+Brazil;BRL;PRE+SEM;Tesouro Prefixado com Juros Semestrais;Tesouro Prefixado Sem
