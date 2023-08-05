@@ -19,11 +19,12 @@ headers = {
 
 
 def get_b3_classification() -> pd.DataFrame:
-    """
-    Buscar as classificações das empresas listadas na B3.
-    Estes dados são fornecidos em planilha Excel não estruturada,
-    portando é necessário realizar o download, tratar e preencher
-    as linhas vazias.
+    """Search the rankings of companies listed on B3. These data are provided
+    in an unstructured Excel spreadsheet, therefore it is necessary to download,
+    process and fill in the empty lines.
+
+    Returns:
+        pd.DataFrame: A dataframe with the new information.
     """
     URL = "http://www.b3.com.br/lumis/portal/file/fileDownload.jsp?fileId="
     FILE = "8AA8D0975A2D7918015A3C81693D4CA4"
@@ -55,10 +56,11 @@ def get_b3_classification() -> pd.DataFrame:
 
 
 def get_fiis_classification() -> pd.DataFrame:
-    """_summary_
+    """Search for classifications of real estate funds provided by fiis.com.
+    For this, a scraping must be done for each FII.
 
     Returns:
-        pd.DataFrame: _description_
+        pd.DataFrame: A dataframe with the new information.
     """
     URL = "https://fiis.com.br/lista-de-fundos-imobiliarios/"
 
@@ -101,8 +103,3 @@ def get_fiis_classification() -> pd.DataFrame:
             list_error.append(fii)
 
     return df_fiis
-
-
-if __name__ == "__main__":
-    # print(get_b3_classification())
-    print(get_fiis_classification())
